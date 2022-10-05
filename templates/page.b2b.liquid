@@ -1,0 +1,130 @@
+<div class="container">
+  <div class="sixteen columns">
+    <div class="section clearfix">
+      <h1>{{ page.title }}</h1>
+    </div>
+  </div>
+
+  <div class="ten columns">
+    <div class="section clearfix">
+      {{ page.content }}
+    </div>
+  </div>
+
+  <div class="six columns">
+    <h3>{{ 'pages.b2b.form.title' | t }}</h3>
+    {% form 'contact' %}
+      {% if form.posted_successfully? %}
+        <p class="quote">{{ 'contact.form.post_success' | t }}</p>
+      {% endif %}
+
+      {% if form.errors %}
+        <p class="quote">{{ 'general.forms.post_error' | t }}</p>
+
+        {% assign message = 'contact.form.message' | t %}
+        <ul class="center">
+          {% for field in form.errors %}
+            {% if field == 'form' %}
+              <li>
+                {{ form.errors.messages[field] }}
+              </li>
+            {% else %}
+              <li>
+                {% assign field_name = field | replace: 'body', message %}
+                {{ 'general.forms.post_field_error_html' | t: field: field_name, error: form.errors.messages[field] }}
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <div class="three columns alpha">
+        {% assign name_attr = 'contact.form.name' | handle %}
+        <label for="contactFormName">{{ 'contact.form.name' | t }} <span class="red">*</span></label>
+        <input type="text" id="contactFormName" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words"
+               value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required="required">
+      </div>
+
+      <div class="three columns omega">
+        <label for="contactFormEmail">{{ 'contact.form.email' | t }} <span class="red">*</span></label>
+        <input type="email" id="contactFormEmail" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off"
+               value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required="required">
+      </div>
+
+      <label for="contactFormMessage">{{ 'contact.form.message' | t }} <span class="red">*</span></label>
+      <textarea rows="5" id="contactFormMessage" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}" required="required">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+
+      <input type="submit" class="submit action_button" value="{{ 'contact.form.send' | t }}"/>
+    {% endform %}
+  </div>
+
+  <div class="clearfix"></div>
+  <br>
+
+  {% section 'slideshow-b2b' %}
+
+  <br>
+
+  {% section 'testimonial' %}
+
+  {% if page.metafields.content.extra != blank %}
+    <div class="section clearfix">
+      <div class="sixteen columns">
+        {{ page.metafields.content.extra }}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<div class="section--gray" style="margin-bottom: -2em; padding: 2em 0;">
+  <div class="container">
+    <div class="section clearfix">
+      <div class="five columns">&nbsp;</div>
+      <div class="six columns">
+        {% form 'contact' %}
+          {% if form.posted_successfully? %}
+            <p class="quote">{{ 'contact.form.post_success' | t }}</p>
+          {% endif %}
+
+          {% if form.errors %}
+            <p class="quote">{{ 'general.forms.post_error' | t }}</p>
+
+            {% assign message = 'contact.form.message' | t %}
+            <ul class="center">
+              {% for field in form.errors %}
+                {% if field == 'form' %}
+                  <li>
+                    {{ form.errors.messages[field] }}
+                  </li>
+                {% else %}
+                  <li>
+                    {% assign field_name = field | replace: 'body', message %}
+                    {{ 'general.forms.post_field_error_html' | t: field: field_name, error: form.errors.messages[field] }}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          <div class="three columns alpha">
+            {% assign name_attr = 'contact.form.name' | handle %}
+            <label for="contactFormName">{{ 'contact.form.name' | t }} <span class="red">*</span></label>
+            <input type="text" id="contactFormName" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words"
+                   value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required="required">
+          </div>
+
+          <div class="three columns omega">
+            <label for="contactFormEmail">{{ 'contact.form.email' | t }} <span class="red">*</span></label>
+            <input type="email" id="contactFormEmail" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off"
+                   value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required="required">
+          </div>
+
+          <label for="contactFormMessage">{{ 'contact.form.message' | t }} <span class="red">*</span></label>
+          <textarea rows="5" id="contactFormMessage" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}" required="required">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+
+          <input type="submit" class="submit action_button" value="{{ 'contact.form.send' | t }}"/>
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</div>

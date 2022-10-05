@@ -1,0 +1,315 @@
+
+<div class="top_bar top_bar--fixed-{{section.settings.fix_top_bar}}">
+  <div class="container">
+    
+
+ 
+    
+    
+
+    
+    <div class="four columns testimonials_section">
+      
+      <p> 5/5 stjerner.</p>
+      <p><span class=""><img class="testimonial_header_img" src="{{ section.settings.testimonial_header_img | img_url: '100x' }}" alt="{{ shop.name }}" /></span></p>
+      
+      <span class="header-spacer"></span>
+      <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h256v256H0z"></path><path d="M224 177.3V78.7a8.1 8.1 0 0 0-4.1-7l-88-49.5a7.8 7.8 0 0 0-7.8 0l-88 49.5a8.1 8.1 0 0 0-4.1 7v98.6a8.1 8.1 0 0 0 4.1 7l88 49.5a7.8 7.8 0 0 0 7.8 0l88-49.5a8.1 8.1 0 0 0 4.1-7Z" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" class="stroke-000000"></path><path fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="M177 152.5v-52L80 47" class="stroke-000000"></path><path fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="m222.9 74.6-94 53.4-95.8-53.4M128.9 128l-.9 106.8" class="stroke-000000"></path></svg>
+      Fragt 29 kr - Gratis over 499 kr
+
+      <span class="header-spacer"></span>
+      <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h256v256H0z"></path><path d="M176 80h42.6a7.9 7.9 0 0 1 7.4 5l14 35M16 144h160" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" class="stroke-000000"></path><circle cx="188" cy="192" fill="none" r="24" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" class="stroke-000000"></circle><circle cx="68" cy="192" fill="none" r="24" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" class="stroke-000000"></circle><path fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" d="M164 192H92M44 192H24a8 8 0 0 1-8-8V72a8 8 0 0 1 8-8h152v107.2M176 120h64v64a8 8 0 0 1-8 8h-20" class="stroke-000000"></path></svg>
+      Bestil nu og få leveret i morgen
+      
+    </div>
+  
+    <div class="sub-menu">
+      <a href="#">Om os</a>
+      <a href="#">Hjælp</a>
+      <a href="#">B2B</a>
+      <a href="#">Danmark</a>
+    </div>
+    
+  </div>
+</div>
+
+<div class="container content">
+  <div class="sixteen columns logo header-logo">
+    <div class="site-logo">
+      <a href="/" title="{{ shop.name }}" class="logo-align--{{ section.settings.logo_alignment }}"><img src="{{ section.settings.logo | img_url: '720x' }}" alt="{{ shop.name }}" /></a>
+    </div>
+    <!-- /.site-logo -->
+    <div class="site-nav">
+        <div id="nav" class=" nav-align--{{section.settings.menu_alignment}}
+                          nav-border--{{ section.settings.nav_border }}
+                          nav-separator--{{ section.settings.nav_separator }}">
+      <ul id="menu">
+        {% for link in linklists[section.settings.main_linklist].links %}
+          {% if linklists[link.handle] == empty %}
+            <li><a href="{{ link.url }}" {% if link.active %}class="active"{% endif %}>{{ link.title }}</a></li>
+          {% else %}
+            <li class="dropdown"><a href="{{ link.url }}" {% if link.active %}class="active"{% endif %} {% for link in linklists[link.handle].links %}{% if link.active %}class="active"{% endif %}{% endfor %}>{{ link.title }}<span class="icon-down-arrow arrow"></span></a>
+              <ul class="animated fadeIn">
+                {% for link in linklists[link.handle].links %}
+                  {% if linklists[link.handle] == empty %}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {% else %}
+                  <li><a href="{{ link.url }}">{{ link.title }} <span class="icon-right-arrow arrow"></span></a>
+                    <ul class="animated fadeIn">
+                      {% for link in linklists[link.handle].links %}
+                        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <!-- /ul#menu -->
+    </div>
+
+
+
+      
+    </div>
+
+    <div class="mini-cart">
+      <a href="#">
+        Indkøbskurv 
+        <?xml version="1.0" ?><svg class="feather feather-shopping-cart" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart_count">{{ cart.item_count }}</span>
+      </a>
+    </div>
+
+    
+    <!-- /.site-logo -->
+  </div>
+
+  <div class="sixteen columns clearfix">
+    <div id="mobile_nav" class="nav-align--{{ section.settings.menu_alignment }} nav-border--{{ section.settings.nav_border }}">
+      {% if settings.show_multiple_currencies %}
+        <div class="mobile_currency">
+          {% include 'currencies-switcher' %}
+        </div>
+      {% endif %}
+    </div>
+    
+  </div>
+  {% if section.settings.announcement_message != blank %}
+    <div class="sixteen columns">
+      <div class="section clearfix featured_content">
+        {% if section.settings.announcement_link != blank %}
+          <a href="{{ section.settings.announcement_link }}">
+        {% endif %}
+            {{ section.settings.announcement_message }}
+        {% if section.settings.announcement_link != blank %}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<script type="text/javascript" defer>
+  //$( document ).ready(function() {
+	//$( ".usp > div > div:first-child" ).replaceWith( '<div class="one-third column alpha"><a href="#usp-1" class="lightbox"><iframe src="https://www.byravn.dk/pages/fragtnedtaelling?1" frameborder="0" scrolling="no" style="color: #fff;max-width: 300px;height: 15px;display: inline-block;pointer-events: none;vertical-align: -3px;"></iframe></a></div>' );
+//});
+</script>
+
+<style>
+  .featured_content {
+    background: {{ section.settings.announcement_bg_color }};
+    border: 1px solid {{ section.settings.announcement_bg_color }};
+    padding: 8px 8px;
+    text-align: center;
+    font-size: 14px;
+    text-shadow: 0 1px rgba(0,0,0,0.1);
+	border-radius: 3px;    
+  }    
+  .featured_content a, .featured_content p {
+    color: {{ section.settings.announcement_color }};
+  }
+  .testimonial_header_img {
+    margin-top: 10px;
+  }
+  .testimonials_section p {
+    margin: 0 10px 0 0;
+  }
+  .testimonials_section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-items: center;
+    width: 100%!important;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "header-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image",
+      "info": "720px wide recommended"
+    },
+	{
+      "type": "image_picker",
+      "id": "testimonial_header_img",
+      "label": "Testimonial Image",
+      "info": "400px wide recommended"
+    },
+    {
+      "type": "text",
+      "id": "logo_width",
+      "label": "Logo display width",
+      "info": "Recommended display width is 360 pixels",
+      "default": "360"
+    },
+    {
+      "type": "select",
+      "id": "logo_alignment",
+      "label": "Logo alignment",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "main_linklist",
+      "label": "Main menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "select",
+      "id": "menu_alignment",
+      "label": "Main menu alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },      
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "nav_border",
+      "label": "Main menu border",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "dashed",
+          "label": "Dashed"
+        },
+        {
+          "value": "dotted",
+          "label": "Dotted"
+        },
+        {
+          "value": "double",
+          "label": "Double"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        }
+      ],
+      "default": "double"
+    },
+    {
+      "type": "select",
+      "id": "nav_separator",
+      "label": "Main menu link separator",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "solid",
+          "label": "Border"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "header",
+      "content": "Announcement"
+    },
+    {
+      "type": "richtext",
+      "id": "announcement_message",
+      "label": "Announcement message"
+    },
+    {
+      "type": "url",
+      "id": "announcement_link",
+      "label": "Announcement link (optional)"
+    },
+    {
+      "type": "color",
+      "id": "announcement_color",
+      "label": "Announcement color",
+      "default": "#444"
+    },
+    {
+      "type": "color",
+      "id": "announcement_bg_color",
+      "label": "Announcement background color",
+      "default": "#fff"
+    },
+    {
+      "type": "header",
+      "content": "Top bar"
+    },
+    {
+     "type": "checkbox",
+     "id": "search_box_top_bar",
+     "label": "Show search form",
+     "default": true
+    },
+    {
+     "type": "checkbox",
+     "id": "fix_top_bar",
+     "label": "Fixed ('sticky') top bar",
+     "default": true
+    },
+    {
+     "type": "link_list",
+     "id": "top_bar_linklist",
+     "label": "Top bar menu"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "Phone number",
+      "info": "1-800-555-5555"
+    }
+  ]
+}
+{% endschema %}

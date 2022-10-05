@@ -1,0 +1,484 @@
+{% if section.settings.product_breadcrumb %}
+  <div class="sixteen columns">
+    <div class="breadcrumb breadcrumb_text product_breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+      <span><a href="{{ shop.url }}" title="{{ shop.name | escape }}" itemprop="item"><span itemprop="name">{{ 'general.breadcrumbs.home' | t }}</span></a></span>
+      <span class="icon-right-arrow"></span>
+      <span>
+        {% if collection %}
+          <a href="{{ collection.url }}" title="{{ collection.title | escape }}" itemprop="item"><span itemprop="name">{{ collection.title }}</span></a>
+        {% else %}
+          <a href="/collections/all" title="{{ collections.all.title }}">{{ collections.all.title }}</a>
+        {% endif %}
+      </span>
+      <span class="icon-right-arrow"></span>
+      {{ product.title }}
+    </div>
+  </div>
+{% endif %}
+<div  itemscope itemtype="http://schema.org/Product" class="tester">
+  
+  {% if product.metafields.vigtige_punkter2.vigtige_punkter2 %}
+  <meta itemprop="description" content="{{ product.metafields.vigtige_punkter2.vigtige_punkter2 | strip_html }}" />
+  {% endif %}
+  
+  <link itemprop="image" href="{{ product | img_url: '720x720' }}" />
+  {%- assign current_variant = product.selected_or_first_available_variant -%}
+  <link itemprop="sku" href="{{ current_variant.sku }}" />
+  <meta itemprop="mpn" content="{{ current_variant.sku }}" />
+  
+</div>  
+<div class="sixteen columns product-{{ product.id }}">
+   <div class="section product_section clearfix thumbnail_position--{{settings.thumbnail_position}} product_slideshow_animation--{{settings.product_slideshow_animation}}"
+        data-thumbnail="{{settings.thumbnail_position}}"
+        data-slideshow-animation="{{settings.product_slideshow_animation}}"
+        data-slideshow-speed="{{settings.slideshow_speed}}">
+
+    {% if section.settings.product_images_position == 'left' %}
+      <div class="flexslider-container ten columns alpha">
+        {% include 'product-images' %}
+        <div class="blackWeekBadge" style="display: none;"><span>BLACK WEEK</span>Spar 20% hele ugen</div>
+        
+      </div>
+    {% endif %}
+
+     <div class="six columns {% if section.settings.product_images_position == 'left' %}omega{% else %}alpha{% endif %}">
+      {% assign collection_handles = product.collections | map: 'handle' %}
+      {% assign variant = product.selected_or_first_available_variant %}
+       
+       
+      <div style="font-weight: 500; color: #f74f4f; font-size: 16px;display: none;" class="theOriginal">DEN ORIGINALE</div>
+       <script>
+        $( window ).load(function() {
+ 
+         if( $(".product_name").text() == "TX10-nøglering" ){
+         	$( ".theOriginal" ).show();
+           
+         }
+           // Handler for .ready() called.
+         });
+       </script>
+       
+       
+      <h1 class="product_name" itemprop="name">{{ product.title }}</h1>
+
+       {% include 'judgeme_widgets', widget_type: 'judgeme_preview_badge', concierge_install: true, auto_install: true %}
+       
+      {% if settings.enable_shopify_product_badges %}
+        <a href="#shopify-product-reviews" onclick="smoothScroll('#shopify-product-reviews');">
+<!--           <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span> -->
+        </a>
+      {% endif %}                                                       
+
+      {% if section.settings.display_vendor %}
+        <p class="vendor">
+          <span itemprop="brand">{{ product.vendor | link_to_vendor }}</span>
+        </p>
+      {% endif %}
+
+      {% if variant.sku != blank and section.settings.display_sku %}
+        <p class="sku">
+          <span itemprop="sku">{{ current_variant.sku }}</span>
+        </p>
+      {% endif %}
+
+      {% include 'size-chart-popup' %}
+
+      {% unless collection_handles contains 'coming-soon' %}
+        <p class="modal_price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+          <meta itemprop="priceCurrency" content="{{ shop.currency }}" />
+          <meta itemprop="price" content="{{ variant.price | money_without_currency }}" />
+          <meta itemprop="seller" content="{{ shop.name | escape }}" />
+          <link itemprop="availability" href="http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}">
+          <meta itemprop="itemCondition" content="New" />
+          <meta itemprop="url" content="{{ shop.url }}{{ product.url }}" />
+          
+          
+          
+          
+    
+          
+         
+       <div itemprop="brand" itemtype="http://schema.org/Brand" itemscope style="display: none!important;">
+          <meta itemprop="name" content="{{ product.vendor }}" />
+        </div>
+          
+       
+       
+
+       <script defer>
+
+         // Show discount as price, discount in % and before price on the product page.
+
+
+       </script>
+       
+       
+
+          <span class="sold_out">{% if variant.available == false %}{{ 'products.product.sold_out' | t }}{% endif %}</span>
+          <span content="{{ variant.price | money_without_currency }}" class="{% if variant.compare_at_price > variant.price %}sale{% endif %}">
+            
+            <span class="was_price" style="display:block;margin-bottom:10px;">
+            {% if variant.price < variant.compare_at_price and variant.available %}
+              <span class="money" style="font-size:20px;font-style:normal;">før {{ variant.compare_at_price | money }}</span>
+            {% endif %}
+          </span>
+          <span itemprop="price" content="{{ variant.price | money_without_currency }}" class="{% if variant.compare_at_price > variant.price %}sale{% endif %}">
+            <span class="current_price {% if product.available == false %}hidden{% endif %}">
+              {% if variant.price > 0 %}
+              <span class="money" style="font-weight:bold;font-size:16px;">{{ variant.price | money }} 
+                {% if variant.price < variant.compare_at_price and variant.available %}
+                {% assign calculatedPercentage = variant.price | times: 100 | divided_by: variant.compare_at_price %}
+                {% assign calculatedPercentageAfter = 100 | minus: calculatedPercentage %}
+                <span class="discountamount" style="color:#f74f4f;font-weight:600;">
+                SPAR {{ calculatedPercentageAfter }} %</span> 
+                {% endif %} 
+              </span>
+              {% else %}
+                {{ settings.free_price_text }}
+              {% endif %}
+            </span>
+            
+          </span>
+            
+            
+          </span>       
+       
+        </p>
+
+        {% include 'product-notify-me' %}
+      {% endunless %}
+       
+	  {% unless collection_handles contains 'coming-soon' %}
+        {% include 'product-form' with 'product' %}
+      {% endunless %}
+       
+       
+       {% include 'viabill-pricetag' %}
+       
+      {% if section.settings.product_description_position == "top" %}
+       	{% if section.settings.display_usp %}
+       		<hr>
+             <div class="description_usp">
+               <ul>
+                 {% if section.settings.description_usp_one != blank %} <li><i class="fa fa-check"></i><span>{{section.settings.description_usp_one}} <span></li>{% endif %}
+                 {% if section.settings.description_usp_two != blank %} <li><i class="fa fa-check"></i><span>{{section.settings.description_usp_two}}<span></li>{% endif %}
+                 {% if section.settings.description_usp_three != blank %} <li><i class="fa fa-check"></i><span>{{section.settings.description_usp_three}} <span></li>{% endif %}
+               </ul>
+           	 </div>
+        {% endif %}
+         <hr>
+                   
+        {% if product.metafields.vigtige_punkter2.vigtige_punkter2 %}
+          <div class="section clearfix">
+            <div class="vigtige_punkter">
+              {{ product.metafields.vigtige_punkter2.vigtige_punkter2 }}
+            </div>
+          </div>
+			
+        {% endif %}
+                   
+        {% if product.description != blank %}
+         <div class="description" itemprop="description">
+           {{ product.description }}
+         </div>
+        {% endif %}
+      {% endif %}
+
+      {% if settings.enable_shopify_review_comments and settings.review_position == "top" %}
+<!--         <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div> -->
+      {% endif %}
+
+      {% if section.settings.product_description_position == "bottom" %}
+        {% if product.description != blank %}
+         <div class="description" itemprop="description">
+           {{ product.description }}
+         </div>
+        {% endif %}
+      {% endif %}
+
+      {% if section.settings.display_collections or section.settings.display_tags or section.settings.display_type %}
+        <hr />
+      {% endif %}
+
+      <div class="meta">
+        {% if section.settings.display_collections %}
+          <p>
+            <span class="label">{{ 'products.product.collections' | t }}:</span>
+            <span>
+             {% for col in product.collections %}
+               <a href="{{ col.url }}" title="{{ 'collections.general.link_title' | t: title: col.title }}">{{ col.title }}</a>{% unless forloop.last %},{% endunless %}
+             {% endfor %}
+           </span>
+         </p>
+        {% endif %}
+
+        {% if section.settings.display_tags %}
+           <p>
+             {% for tag in product.tags %}
+               {% if forloop.first %}
+                 <span class="label">{{ 'products.product.tags' | t }}:</span>
+               {% endif %}
+
+               {% unless tag contains 'meta-' %}
+                 <span>
+                   <a href="/collections/{% if collection %}{{ collection.handle }}{% else %}all{% endif %}/{{ tag | handle }}" title="{{ 'products.product.products_tagged' | t: tag: tag }}">{{ tag }}</a>{% unless forloop.last %},{% endunless %}
+                 </span>
+               {% endunless %}
+             {% endfor %}
+           </p>
+        {% endif %}
+
+        {% if section.settings.display_type %}
+           <p>
+             <span class="label">{{ 'products.product.product_types' | t }}:</span> <span itemprop="category">{{ product.type | link_to_type }}</span>
+           </p>
+        {% endif %}
+      </div>
+
+      {% include "social-buttons" with "product" %}
+
+      {% comment %}
+      {% if collection %}
+         <hr />
+         <p class="meta">
+           {% if collection.next_product %}
+             {% capture next_url %}{{ collection.next_product }}{% endcapture %}
+             <span class="right">
+               {{ 'products.general.next_product_html' | t | link_to: next_url }}
+             </span>
+           {% endif %}
+
+           {% if collection.previous_product %}
+             {% capture prev_url %}{{ collection.previous_product }}{% endcapture %}
+             <span class="left">
+               {{ 'products.general.previous_product_html' | t | link_to: prev_url }}
+             </span>
+           {% endif %}
+         </p>
+      {% endif %}
+      {% endcomment %}
+
+    </div>
+
+    {% if section.settings.product_images_position == 'right' %}
+      <div class="flexslider-container ten columns omega">
+        {% include 'product-images' %}
+      </div>
+    {% endif %}
+  </div>
+
+  {% if product.metafields.accentuate.extra_description %}
+    <br class="clear" />
+    <div class="section clearfix">
+      <div class="description">
+        {{ product.metafields.accentuate.extra_description }}
+      </div>
+    </div>
+  {% endif %}
+
+{% include 'judgeme_widgets', widget_type: 'judgeme_review_widget', concierge_install: true %}
+</div>
+
+<div class="sixteen columns">
+  {% if settings.enable_shopify_review_comments and settings.review_position == "bottom" %}
+<!--     <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div> -->
+  {% endif %}
+</div>
+
+{% if section.settings.display_related_products %}
+  {% capture limit %}{{ section.settings.products_per_row | plus: 1 }}{% endcapture %}
+
+  {% if collection and collection.all_products_count > 1 %}
+    {% assign col = collection.handle %}
+  {% endif %}
+
+  {% for tag in product.tags %}
+    {% if tag contains 'meta-related-collection-' %}
+      {% assign related_collection_handle = tag | remove: 'meta-related-collection-' %}
+      {% if collections[related_collection_handle].all_products_count > 0 %}
+        {% assign col = related_collection_handle %}
+        {% assign collection = collections[col] %}
+        {% capture limit %}{{ collection.products_count | plus: 1 }}{% endcapture %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% if col and collections[col].all_products_count > 0 %}
+    {% if collections[col].all_products_count != 1 or collections[col].products.first.id != product.id %}
+
+      <div class="sixteen columns">
+        <div class="section clearfix">
+          <h2>{{ 'products.product.related_items' | t }}</h2>
+        </div>
+      </div>
+
+      {% assign skip_product = product %}
+      {% assign products = collections[col].products %}
+      {% assign products_per_row = section.settings.products_per_row %}
+      <div class="sixteen columns">
+        {% include 'product-loop'  %}
+      </div>
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+<script>
+  	$(document).ready(function(){
+      var descriptionElement = $(".description:contains('Vi kan trykke')");
+      
+      	//var notFirstChildP = $(".description p:not(:nth-child(1)");
+  		//var descUl = $(".description ul");
+  		//var firstChildP = $(".description p:nth-child(1)");
+  	
+      if (descriptionElement.length) {
+        //descriptionElement.css("display", "none");
+		//notFirstChildP.hide();
+        //descUl.hide();
+      	//firstChildP.append("<br><br><span class='trykings-detaljer-container'><a class='tryknings-detaljer' id='trykning-id'>Vis/skjul tryknings detaljer<a> <i class='fa fa-info-circle'></i></span>");
+
+     	 //$("#trykning-id").click(function() {
+           //notFirstChildP.toggle();
+           //descUl.toggle();
+      	 //});
+      }
+     	
+     // if ($(".trykings-detaljer-container")[0]) {
+       //   $(".trykings-detaljer-container").css("display", "none");
+      //}
+      
+      
+    });
+  	
+  	// DLV push
+    var itemGroupID = {{ product.metafields.accentuate.shared_product_id }};
+    if(itemGroupID < 10) {
+      itemGroupID = "0"+itemGroupID;
+    }
+    var variantSKU = "{{variant.sku}}";
+    var variantID = "{{variant.id}}";
+    variantSKU = variantSKU.slice(0, -2);
+  	window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        'event': 'shared_id',
+      	'shared_id': variantSKU,
+        'variant_id' : variantID,
+      	'item_group_id': itemGroupID
+      });
+</script>
+       
+{% schema %}
+
+{
+  "name": "Product",
+  "class": "product-template-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "product_breadcrumb",
+      "label": "Show breadcrumb links",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "display_tags",
+      "label": "Show tags"
+    },
+  	{
+      "type": "checkbox",
+      "id": "display_usp",
+      "label": "Show usps"
+    },
+    {
+      "type": "checkbox",
+      "id": "display_type",
+      "label": "Show type"
+    },
+    {
+      "type": "checkbox",
+      "id": "display_vendor",
+      "label": "Show vendor"
+    },
+    {
+      "type": "checkbox",
+      "id": "display_collections",
+      "label": "Show collections"
+    },
+    {
+      "type": "checkbox",
+      "id": "display_sku",
+      "label": "Show SKU"
+    },
+    {
+      "type": "checkbox",
+      "id": "display_related_products",
+      "label": "Show related products ([?](http:\/\/support.outofthesandbox.com\/customer\/portal\/articles\/942378-related-products))",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "products_per_row",
+      "label": "Related products per row",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ]
+    },
+    {
+      "type": "radio",
+      "id": "product_description_position",
+      "label": "Description position",
+      "options": [
+        {
+          "value": "top",
+          "label": "Above 'add to cart'"
+        },
+        {
+          "value": "bottom",
+          "label": "Below 'add to cart'"
+        }
+      ]
+    },
+    {
+      "type": "radio",
+      "id": "product_images_position",
+      "label": "Images position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+     {
+       "type": "text",
+       "id": "description_usp_one",
+       "label": "USP 1"
+     },
+     {
+       "type": "text",
+       "id": "description_usp_two",
+       "label": "USP 2"
+     },
+     {
+       "type": "text",
+       "id": "description_usp_three",
+       "label": "USP 3"
+     }
+  ]
+}
+
+{% endschema %}

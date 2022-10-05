@@ -1,0 +1,203 @@
+{% if section.settings.enable == true %}
+  {% case section.blocks.size %}
+    {% when 1 %}
+      {% assign column = 'sixteen columns' %}
+
+    {% when 2 %}
+      {% assign column = 'eight columns' %}
+
+    {% when 3 %}
+      {% assign column = 'one-third column' %}
+
+    {% when 4 %}
+      {% assign column = 'four columns' %}
+  {% endcase %}
+
+  <div class="usp">
+    <div class="container">
+      {% for block in section.blocks %}
+        {% assign page = false %}
+        {% if block.settings.page != blank %}
+          {% assign page = pages[block.settings.page] %}
+        {% endif %}
+      
+        <div class="{{ column }}{% if forloop.first %} alpha{% endif %}{% if forloop.last %} omega{% endif %}" {{ block.shopify_attributes }}>
+          {% if page %}<a href="#usp-{{ forloop.index }}" class="lightbox">{% endif %}
+          {{ block.settings.content }}
+          
+          {% if page %}
+            <i class="fa fa-info-circle"></i></a>
+          {% endif %}
+        </div>
+      
+        {% if page %}
+          <div style="display: none;">
+            <div id="usp-{{ forloop.index }}" class="usp-lightbox">
+              <h3>{{ page.title }}</h3>
+              <div class="rte">{{ page.content }}</div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Unique selling points",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable",
+        "label": "Enable"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color",
+        "label": "Text color",
+        "default": "#ffffff"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "usp",
+        "name": "USP",
+        "settings": [
+          {
+            "type": "text",
+            "id": "content",
+            "label": "Content"
+          },
+          {
+            "type": "page",
+            "id": "page",
+            "label": "Page"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+<style>
+  .usp {
+    background: {{ section.settings.background_color }};
+
+    font-size: 0.9em;
+    font-weight: bold;
+    color: {{ section.settings.color }};
+    text-align: center;
+
+    padding: 0.5rem 0;
+  }
+
+  .usp a {
+    color: inherit;
+
+    margin-left: 0.25rem;
+  }
+</style>
+
+<style type="text/css">
+  
+    
+#clockdiv{
+
+    display: inline-block;
+
+
+
+}
+
+#clockdiv > div{
+	
+    display: inline-block;
+
+   text-align: left;
+}
+  
+  #clockdiv > div > div{
+  display: inline-block;
+    text-align: left;
+    margin-left: -2px;
+
+  }
+  
+  #clockdiv div	span {
+    
+</style>
+
+<script>
+  $(document).ready(function() {
+    if($("#usp-1313")[0]) {
+      console.log("---0855: gx30");
+      // --- START Countdown timer
+      var today = new Date();
+      if (today.getDay() == 6 || today.getDay() == 0 || today.getDay() == 5) {
+        $('.usp .one-third.column.alpha').html('<a href="#usp-1" class="lightbox" style="display:flex;align-items:center;">Bestil inden kl 12.00 - Så sender vi i dag<i class="fa fa-info-circle" style=""></i></a>');
+        console.log("is weekend");
+        $(".countdown_timer").hide();
+      } else {
+        $('.usp .one-third.column.alpha').html('<div class="countdown_timer" style="display: flex;"><a href="#usp-1" class="lightbox" style="display:flex;align-items:center;"><p style="margin-bottom: 0 !important;margin-top:0 !important;">Vi sender din ordre om</p><p id="days" style="margin-right: 6px;margin-bottom: 0 !important;margin-top:0 !important;font-weight:800;"></p><p id="hours" style="margin-right: 6px;margin-bottom: 0 !important;margin-top:0 !important;font-weight:800;"></p><p id="mins" style="margin-right: 6px;margin-bottom: 0 !important;margin-top:0 !important;font-weight:800;"></p><p id="secs" style="margin-right: 6px;margin-bottom: 0 !important;margin-top:0 !important;font-weight:800;"></p><p style="margin-bottom: 0 !important;margin-top:0 !important;"></p><div id="end"></div><i class="fa fa-info-circle" style="margin-left:0 !important;"></i></a></div>');
+
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = mm + '/' + dd + '/' + yyyy;
+        console.log(today);
+        // The data/time we want to countdown to
+
+        var countDownDate = new Date(mm + " " + dd + ", " + yyyy + " 13:00:00").getTime();
+
+        // Run myfunc every second
+        var myfunc = setInterval(function() {
+
+          var now = new Date().getTime();
+          var timeleft = countDownDate - now;
+
+          // Display the message when countdown is over
+          if (timeleft > 0) {
+            // Calculating the days, hours, minutes and seconds left
+            var days = Math.floor(timeleft / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
+
+            // Result is output to the specific element
+            // document.getElementById("days").innerHTML = days + "d "
+            document.getElementById("hours").innerHTML = hours + "time(r) ";
+            document.getElementById("mins").innerHTML = minutes + "min ";
+            document.getElementById("secs").innerHTML = seconds + "sek ";
+
+            //console.log("under timeleft");
+          } else if(timeleft < 0) {
+            var days = Math.floor(timeleft / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)+24);
+            var minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60)+60);
+            var seconds = Math.floor(((timeleft % (1000 * 60)) / 1000)+60);
+
+            // Result is output to the specific element
+            // document.getElementById("days").innerHTML = days + "d "
+            document.getElementById("hours").innerHTML = hours + "time(r) ";
+            document.getElementById("mins").innerHTML = minutes + "min ";
+            document.getElementById("secs").innerHTML = seconds + "sek ";
+
+            // $(".countdown_timer").hide();
+            //console.log("over timeleft");
+            // clearInterval(myfunc);
+
+          }
+        }, 1000);
+      }
+      // --- END Read more function
+    }
+  });
+</script>

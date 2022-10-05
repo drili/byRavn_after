@@ -1,0 +1,162 @@
+{% if product.metafields.accentuate.data_option_value %}
+
+    {% assign variant_index = product.metafields.accentuate.data_option_value | minus: 1 %}
+    {% assign show_custom_pickers_for = product.options_with_values[variant_index].values.size | minus: 1 %}
+    
+    {% if product.metafields.accentuate.custom_picker_show_all or show_custom_pickers_for >=1 %}     
+
+    <div id="custompicker-area">
+      
+      {{ product.metafields.accentuate.engraving_explain}}
+           
+      
+      {% if show_custom_pickers_for >= 1 or product.metafields.accentuate.custom_picker_show_all %} 
+      <div id="custom-picker-1">  
+        <p>
+
+          <a class="lightbox swatch-element custompicker" href="#inline1">
+            {{ product.metafields.accentuate.label }}
+          </a>
+
+          {% comment %} placeholder for selected images shown to the customer {% endcomment %}
+          <div style="clear:both" id="custom-picker-image-1"></div>
+
+          {% comment %} hidden field to hold the raw image data (array of image sources) to be submitted with the form {% endcomment %}      
+          <input id="custom-picker-rawdata-1" type="hidden" name="properties[_{{ product.metafields.accentuate.label_in_basket }}]">
+
+          <div id="inline1" class="no-user-select" style="display: none">
+            <div class="display_wrapper">       
+              <label>{{ product.metafields.accentuate.label }}</label>				
+              <div id="keyboard-display-1" class="keyboard_symbols" data-max-width="{{ product.metafields.accentuate.print_width }}"></div>      
+            </div>
+
+            <div class="keyboard_container">
+              {% include 'keyboard' with 'keyboard-1' %}  
+            </div>
+
+          </div>    
+       
+        </p>
+      </div>
+
+      {% endif %}
+
+      {% unless product.metafields.accentuate.custom_picker_show_all %}{% if show_custom_pickers_for == 2  %}
+
+      <div id="custom-picker-2">  
+        <p>
+
+          <a class="lightbox swatch-element custompicker" href="#inline2">
+            {{ product.metafields.accentuate.label_2 }}
+          </a>
+
+          {% comment %} placeholder for selected images shown to the customer {% endcomment %}
+          <div style="clear:both" id="custom-picker-image-2"></div>
+
+          {% comment %} hidden field to hold the raw image data (array of image sources) to be submitted with the form {% endcomment %}      
+          <input id="custom-picker-rawdata-2" type="hidden" name="properties[_{{ product.metafields.accentuate.label_2_in_basket }}]">
+
+          <div id="inline2" class="no-user-select" style="display: none">          
+            <div class="display_wrapper">
+              <label>{{ product.metafields.accentuate.label_2 }}</label>				        
+              <div id="keyboard-display-2" class="keyboard_symbols" data-max-width="{{ product.metafields.accentuate.print_width_2 }}"></div>      
+            </div>
+
+            <div class="keyboard_container">
+              {% include 'keyboard' with 'keyboard-2' %}  
+            </div>
+          </div>
+
+        </p>
+      </div>
+
+	{% endif %}{% endunless %}
+
+    </div>
+      
+    <script>
+      
+      $(document).ready( function(){
+
+      var variantSelector = ".swatch input[type='radio'][name='option-{{ product.metafields.accentuate.data_option_value | minus: 1 }}']";
+      var selectedClass = "selected";
+
+      function getCurrentOptionIndex()
+      {
+          var i = $(variantSelector + "." + selectedClass).index(variantSelector);
+          return i;
+      }
+
+      {% if product.metafields.accentuate.custom_picker_show_all %}
+
+      var data_max_width = [{{ product.metafields.accentuate.print_width }}];
+      
+      $("#custompicker-area").css("display", "inline-block");
+      $("#custom-picker-1").css("display", "inline");
+      $("#keyboard-display-1").attr("data-max-width", data_max_width[0]).attr("data-current-width", 0);       
+      
+      attachKeyboard("keyboard-display-1", "keyboard-1", "custom-picker-image-1", "custom-picker-rawdata-1");
+
+      $(variantSelector).on('click', function ()
+      {
+          $(variantSelector + ":eq(" + getCurrentOptionIndex() + ")").removeClass(selectedClass);
+          $(this).addClass(selectedClass);              
+        
+          // also clear any previous selection to be sure customer's choice are within limits
+        
+          $("#custom-picker-image-1").removeAttr("src");
+          $("#custom-picker-image-1").html('');
+          $("#custom-picker-rawdata-1").removeAttr("value");
+          $("#keyboard-display-1").attr("data-max-width", data_max_width[getCurrentOptionIndex()]).attr("data-current-width", 0);  
+        $("#keyboard-display-1").html('');
+
+          // reset keyboard        
+          attachKeyboard("keyboard-display-1", "keyboard-1", "custom-picker-image-1", "custom-picker-rawdata-1");
+      })  
+
+      {% else %}
+      
+      $(variantSelector).on('click', function ()
+      {
+          $(variantSelector + ":eq(" + getCurrentOptionIndex() + ")").removeClass(selectedClass);
+          $(this).addClass(selectedClass);              
+
+          var newOptionIndex = getCurrentOptionIndex();
+
+          if (newOptionIndex == 0)
+          {
+              $("#custompicker-area").css("display", "none");
+              $("#custom-picker-1").css("display", "none");
+              $("#custom-picker-image-1").removeAttr("src");
+              $("#custom-picker-rawdata-1").removeAttr("value");
+              attachKeyboard("keyboard-display-1", "keyboard-1", "custom-picker-image-1", "custom-picker-rawdata-1");
+          }
+
+          if (newOptionIndex <= 1)
+          {
+              $("#custom-picker-2").css("display", "none");
+              $("#custom-picker-image-2").removeAttr("src");
+              $("#custom-picker-rawdata-2").removeAttr("value");
+              attachKeyboard("keyboard-display-2", "keyboard-2", "custom-picker-image-2", "custom-picker-rawdata-2");
+          }
+
+          if (newOptionIndex >= 1)
+          {
+              $("#custompicker-area").css("display", "inline-block");
+              $("#custom-picker-1").css("display", "inline");
+	          attachKeyboard("keyboard-display-1", "keyboard-1", "custom-picker-image-1", "custom-picker-rawdata-1");
+          }
+
+          if (newOptionIndex >= 2)
+          {
+	          $("#custom-picker-2").css("display", "inline");
+              attachKeyboard("keyboard-display-2", "keyboard-2", "custom-picker-image-2", "custom-picker-rawdata-2");            
+          }
+      })  
+      {% endif %}
+});
+    </script>        
+	{% endif %}
+
+{% endif %}
+

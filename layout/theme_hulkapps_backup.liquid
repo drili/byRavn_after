@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="{{ shop.locale }}" style="background-color: {{ settings.footer_color }}"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="{{ shop.locale }}" style="background-color: {{ settings.footer_color }}"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="{{ shop.locale }}" style="background-color: {{ settings.footer_color }}"> <![endif]-->
+<!--[if IE 9 ]><html class="ie ie9" lang="{{ shop.locale }}" style="background-color: {{ settings.footer_color }}"> <![endif]-->
+<!--[if (gte IE 10)|!(IE)]><!--><html lang="{{ shop.locale }}" style="background-color: {{ settings.footer_color }}"> <!--<![endif]-->
+ 
+
+ <head>
+   {{ 'https://kite.spicegems.org/0/js/scripttags/byravn/static/country-redirect.js' | script_tag }}
+
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="5c0b239e-2191-4a95-a2f0-284ca10a8151" type="text/javascript" async></script>
+   
+<!-- Start of Sleeknote signup and lead generation tool - www.sleeknote.com -->
+<script id="sleeknoteScript" type="text/javascript" defer>
+(function (){
+ 	var sleeknoteScriptTag=document.createElement("script");
+ 	sleeknoteScriptTag.type="text/javascript";
+ 	sleeknoteScriptTag.charset="utf-8";
+ 	sleeknoteScriptTag.src=("//sleeknotecustomerscripts.sleeknote.com/16208.js");
+ 	var s=document.getElementById("sleeknoteScript");
+	s.parentNode.insertBefore(sleeknoteScriptTag, s);
+})(); </script>
+<!-- End of Sleeknote signup and lead generation tool - www.sleeknote.com -->
+   
+   <meta name="p:domain_verify" content="b7a1005efe474cb9a4245a1df080295f"/>
+   
+    <meta charset="utf-8">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="robots" content="index,follow">
+
+    
+    {% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %}{% endif %}
+    <title>{% if template contains "index" %}{{ page_title }}{% else %}{{ page_title }}{% if current_tags %} {{ 'general.meta.tagged_html' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} {{ 'general.meta.page' | t: page_number: current_page }}{% endif %}{% unless page_title contains shop.name %} - {{ shop.name }}{% endunless %}{% endif %}</title>
+  {% include "win_ads" %}
+
+
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}{% if current_tags %} {{ 'general.meta.tagged_html' | t: tags: meta_tags | escape }}.{% endif %}{% if current_page != 1 %} {{ 'general.meta.page' | t: page_number: current_page }}.{% endif %}" />
+    {% endif %}
+
+    <!-- Custom Fonts -->
+    {% if settings.logo_font contains 'Google' or settings.headline_font contains 'Google' or settings.nav_font contains 'Google' or settings.slideshow_subtitle_font contains 'Google' or settings.regular_font contains 'Google' or settings.top_bar_font contains 'Google' %}
+      <link href="//fonts.googleapis.com/css?family=.|{% if settings.logo_font contains 'Google' %}{{ settings.logo_font | replace: 'Google_', '' }}:light,normal,bold|{% endif %}{% if settings.headline_font contains 'Google' %}{{ settings.headline_font | replace: 'Google_', '' }}:light,normal,bold|{% endif %}{% if settings.nav_font contains 'Google' %}{{ settings.nav_font | replace: 'Google_', '' }}:light,normal,bold|{% endif %}{% if settings.slideshow_subtitle_font contains 'Google' %}{{ settings.slideshow_subtitle_font | replace: 'Google_', '' }}:light,normal,bold|{% endif %}{% if settings.top_bar_font contains 'Google' %}{{ settings.top_bar_font | replace: 'Google_', '' }}:light,normal,bold|{% endif %}{% if settings.regular_font contains 'Google' %}{{ settings.regular_font | replace: 'Google_', ''  }}:light,normal,bold{% endif %}" rel="stylesheet" type="text/css" />
+    {% endif %}
+
+    {% include 'social-meta-info' %}
+
+    {% if collection.previous_product %}
+      <link rel="prev" href="{{ collection.previous_product }}">
+    {% endif %}
+    {% if collection.next_product %}
+      <link rel="next" href="{{ collection.next_product }}">
+    {% endif %}
+
+    <!-- Mobile Specific Metas -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.shop_bg_color }}">
+
+    <!-- Stylesheets for Responsive 6.1.1 -->
+    {{ 'styles.scss.css' | asset_url | stylesheet_tag }}
+   	{{ 'devst-styles.css' | asset_url | stylesheet_tag }}
+    {{ 'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.8.0/css/flag-icon.min.css' | stylesheet_tag }}
+    
+    <!-- Icons -->
+    {% if settings.favicon != nil %}
+      <link rel="shortcut icon" type="image/x-icon" href="{{ settings.favicon | img_url }}">
+    {% else %}
+      <link rel="shortcut icon" type="image/x-icon" href="{{ 'favicon.png' | asset_url }}">
+    {% endif %}
+    
+    {% if template contains 'article' %}
+      {% assign current_object = article %}
+    {% elsif template contains 'blog' %}
+      {% assign current_object = blog %}
+    {% elsif template contains 'collection' %}
+      {% assign current_object = collection %}
+    {% elsif template contains 'page' %}
+      {% assign current_object = page %}
+    {% elsif template contains 'product' %}
+      {% assign current_object = product %}
+    {% endif %}
+    
+    {% if current_object.metafields.seo.canonical != blank %}
+      <link rel="canonical" href="{{ current_object.metafields.seo.canonical }}">
+    {% else %}
+      <link rel="canonical" href="{{ canonical_url }}">
+    {% endif %}
+
+    {% if template contains 'customer' %}
+      {{ "shopify_common.js" | shopify_asset_url | script_tag }}
+      {{ "customer_area.js" | shopify_asset_url | script_tag }}
+    {% endif %}
+
+    {% if template contains 'product' %}
+      {{ "jquery.min.js" | asset_url | script_tag }}
+      {{ "keyboard.js" | asset_url | script_tag }}
+    {% endif %}
+    
+   <script src="{{ 'app.js' | asset_url }}" async></script>
+   
+   <script src="{{ 'devst-scripts.js' | asset_url }}" defer></script>
+
+    <script src="{{ 'lazysizes.min.js' | asset_url }}" defer></script>
+    {{ content_for_header }}
+{%include 'logic_trk' %} {%- render 'bold-common' -%}
+  
+<!-- spurit_dm-added -->
+<link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/shopify-apps/discount-manager/store/bdbfcd9161650b73a51f1a8ef9ff2e9c.css">
+<!-- /spurit_dm-added -->
+    
+  {% include 'judgeme_core' %}
+   <meta property="og:image" content="https://cdn.shopify.com/s/files/1/1795/0613/files/ogimage.png">
+   
+   <!-- Google Tag Manager -->
+    <script defer>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MFGM5ZS');</script>
+    <!-- End Google Tag Manager -->
+   
+   <!-- DataLayer Start -->
+   	{% if template == "product" %}
+   <script type="text/javascript" defer>
+     window.dataLayer = window.dataLayer || []; 
+     dataLayer.push({
+       'event': 'view_item',
+       'ecommerce': {
+         'currencyCode': 'DKK',
+         'add': {                                
+           'products': [{                        
+             'name': '{{ product.title }}',
+             'id': {{ product.id }},
+             'price': {{ product.price | divided_by: 100 }},
+             'category': '{{ product.type }}',
+             'variant': '{{ product.selected_or_first_available_variant }}',
+             'quantity': 1
+           }]
+         }
+       }
+     });
+     cart_data = {{ cart | json}};
+     console.log(cart_data);
+   </script>
+   {% endif %}
+   <!-- DataLayer End -->
+</head>
+  <body class="{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}">
+    
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFGM5ZS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    {% section 'header' %}
+    
+    {% unless template == 'page.b2b' %}
+      {% section 'usp' %}
+    {% endunless %}
+    
+    <div {% unless template contains "index" or template contains "article" or template contains "banner" %}class="container"{% endunless %}>
+      {{ content_for_layout }}
+      {% include 'cart-shipping-calculator' %}
+    </div>
+
+    {% if template contains "cart" %}        
+    	{% section 'footer-cart' %}
+    {% else %}
+    	{% section 'footer' %}          
+    {% endif %}
+
+    {% if settings.size_chart != blank %}
+       <div id="size-chart" class="size_chart_content">
+         <h5 class="center">{{ pages[settings.size_chart].title }}</h5>
+         {{ pages[settings.size_chart].content }}
+       </div>
+    {% endif %}
+
+    {% include 'newsletter-popup' %}
+    {% include 'currencies' %}
+    {% section 'country-popup' %}
+    
+    {% if settings.disqus_enabled %}
+      {% if template contains "blog" or template contains "article" or template contains "index" %}
+        <script id="dsq-count-scr" src="//{{ settings.disqus_shortname }}.disqus.com/count.js" defer></script>
+      {% endif %}
+    {% endif %}
+    
+    {{ 'https://use.fontawesome.com/185310f418.js' | script_tag }}
+    
+    
+    <script defer>(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:"26049653"};o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&&s!=="loaded"&&s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","//bat.bing.com/bat.js","uetq");</script>
+    
+<!-- Delete the Beeketing script below after uninstalling Happy Messenger app to remove it from your theme. For more info, read here: https://bit.ly/hmesscode or contact us at hi@beeketing.com. --><!-- BEEKETINGSCRIPT CODE START -->{% include 'bk-tracking' %}<!-- BEEKETINGSCRIPT CODE END -->
+
+<!-- CRITEO START -->
+{% include 'criteo-tracking' %}
+<!-- CRITEO END -->
+</body>
+   	
+
+</html>
+

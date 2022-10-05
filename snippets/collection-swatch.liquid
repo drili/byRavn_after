@@ -1,0 +1,32 @@
+{% if settings.collection_swatches %}
+  {% assign file_extension = 'png' %}
+
+  {% for option in product.options %}
+    {% assign downcased_option = option | prepend: '_' | downcase %}
+    {% if downcased_option contains '_farve' or downcased_option contains '_color' or downcased_option contains '_colour' %}
+      {% assign option_index = forloop.index0 %}
+      {% assign values = '' %}
+      <div class="collection_swatches">
+        
+        {% for variant in product.variants %}
+          {% assign value = variant.options[option_index] %}
+        
+          {% assign value_for_handle = value | split: '[' %}
+    	  {% assign value_for_handle = value_for_handle | first %}
+
+        
+          {% unless values contains value %}
+            {% assign values = values | join: '|' %}
+            {% assign values = values | append: '|' | append: value %} 
+            {% assign values = values | split: '|' %}
+
+            <a href="{{ variant.url | within: collection }}" class="swatch">
+              <span data-image="{{ variant.featured_image | product_img_url: '480x' }}" style="background-color: {{ value_for_handle | split: ' ' | last | handle }}; background-image: url({{ value_for_handle | handle | append: '.' | append: file_extension | asset_img_url: 'thumb' }}); background-position: center"></span>
+            </a>
+          {% endunless %}
+        {% endfor %}
+
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endif %}

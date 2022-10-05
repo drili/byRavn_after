@@ -1,0 +1,51 @@
+.usp .container {
+	background: #f74f4f;
+	max-width: 1180px;
+  	padding: 0.5rem 0;
+}
+.usp {
+	background: transparent !important;
+  	padding:0 !important;
+}
+.testimonial-block .dev_stars {
+	margin-bottom: 0;
+}
+h1{
+  	border-bottom:none;
+  	font-size:30px;
+}
+/* h1 26px */
+h2, h2.home, h2.title, h2.article_title {
+	font-size: 27px;
+}
+h3{
+  	font-size: 24px;
+}
+h4{
+  font-size:21px;
+}
+h5{
+  font-size:18px;
+}
+h6, .footer h6{
+  font-size:15px;
+}
+.products .thumbnail img, .product_slider .slides img{
+  width:100%;
+}
+.product_slider .slides img{
+  width:100%;
+  object-fit: cover;
+}
+
+@media only screen and (max-width: 1199px){
+  .usp .container {
+	max-width: 940px;
+  }
+}
+
+@media only screen and (max-width: 959px){
+  .usp .container {
+	max-width: 748px;
+  }
+}

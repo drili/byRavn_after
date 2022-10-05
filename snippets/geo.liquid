@@ -1,0 +1,45 @@
+{{ 'https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js' | script_tag }}
+
+<script>
+  var currentDomain = {{ shop.permanent_domain | json }};
+  var currentDomainCookie = Cookies.get('geo-redirect');
+  
+  function geo_setCookie(domain) {
+    Cookies.set('geo-redirected', domain);
+  }
+
+  function geo_redirect(domain) {
+    window.top.location.href = 'https://' + domain;
+  }
+
+  if (window.location.search.indexOf('intl') !== -1) {
+    geo_setCookie(currentDomain);
+
+    currentDomainCookie = currentDomain;
+  }
+
+  if (currentDomainCookie === undefined) {
+    var intendedDomain = null;
+
+    $.getJSON('https://extreme-ip-lookup.com/json/', function (data) {
+      switch (data.countryCode) {
+        case 'SE':
+          intendedDomain = 'byravn-se.myshopify.com';
+          break;
+
+        case 'NO':
+          intendedDomain = 'byravn-no.myshopify.com';
+          break;
+
+        default:
+          intendedDomain = 'byravn.myshopify.com';
+      }
+
+      if (currentDomain !== intendedDomain) {
+        geo_redirect(intendedDomain);
+      }
+    });
+  } else if (currentDomainCookie !== currentDomain) {
+    geo_redirect(currentDomainCookie);
+  }
+</script>

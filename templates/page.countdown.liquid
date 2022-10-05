@@ -1,0 +1,443 @@
+{% layout none %}
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700,800,900&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/fbaa639c7f.js"></script>
+
+
+<style type="text/css">
+  
+  body{
+  	font-family: 'Montserrat', sans-serif;
+    background: #f74f4f;
+    color: #fff;
+    font-size: 12.6px;
+    font-weight: 600;
+    margin: 0;
+    text-align:center;
+  }
+    
+#clockdiv{
+
+    display: inline-block;
+
+
+
+}
+
+#clockdiv > div{
+	
+    display: inline-block;
+
+   text-align: left;
+}
+  
+  #clockdiv > div > div{
+  display: inline-block;
+    text-align: left;
+    margin-left: -2px;
+
+  }
+  
+ 
+
+
+
+</style>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+
+
+
+
+<div style="display: none;">
+    <div id="countdownContent">
+      Datoer der er banned (kommer fra sidens content):<br/>
+        {% include 'page-multi-column', content: page.content %}
+      </div>
+    <hr>
+    Næste hverdag hvor der sendes (kommer fra variabel "tomorrow"):
+    <div id="result"></div>
+</div>
+
+
+<div class="clockworkdiv">
+  Vi sender din ordre om: 
+  <div id="clockdiv" >
+    <div id="cdDays">
+      <span class="days"></span>
+      <div class="smalltext">d : </div>
+    </div>
+    <div id="cdHours">
+      <span class="hours"></span>
+      <div class="smalltext">t : </div>
+    </div>
+    <div id="cdMins">
+      <span class="minutes"></span>
+      <div class="smalltext">m : </div>
+    </div>
+    <div id="cdSecs">
+      <span class="seconds"></span>
+      <div class="smalltext">s</div>
+    </div>
+    <i class="fa fa-info-circle"></i>
+  </div>
+</div>
+<!--Hurtig levering <i class="fa fa-info-circle"></i>-->
+
+<script>
+  
+  
+
+  
+  
+  
+   // Her sættes datoen for i morgen
+  	var tomorrow = new Date();
+	tomorrow.setDate(tomorrow.getDate() + 1);
+  	tomorrow = tomorrow.toISOString().substr(0,10);
+  
+  
+  	// Her tjekkes der om tidspunktet nu er FØR kl. 12 (altså om man kan nå at få sendt i dag).
+  
+    var todayTime = new Date();
+    var timeNow = todayTime.getHours() + "" + todayTime.getMinutes()
+ 	console.log("TID NU: " + timeNow);
+ 
+  
+  	// Hvis kl. er før 12, så skal tomorrow være i dag.
+  	// TID HER
+    if( timeNow < 1125 ){
+    	var tomorrowIsToday = new Date();
+    	tomorrowIsToday.setDate(tomorrowIsToday.getDate());
+  		tomorrow = tomorrowIsToday.toISOString().substr(0,10);
+		
+    }
+    
+  
+  
+  
+  
+  $(document).ready(function() {
+    
+    
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    
+    
+    
+    
+  var getWorkingDays = function(start,endCount,holidays){		
+		var weekdays = [];
+		var current = start;
+
+		var i = 0; 
+		while(i < endCount){
+			if (!isWeekEnd(current)) {
+				weekdays.push(current);
+				i++;
+			}
+			currentObj = new Date(current);
+			current = currentObj.addDays(1).format();
+		}
+
+		function isWeekEnd(date){
+			dateObj = new Date(date);
+			if (dateObj.getDay() == 6 || dateObj.getDay() == 0) {
+				return true;
+			}else{
+				if (holidays.contains(date)) {
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}
+
+		return weekdays;
+	}
+
+	// check if weekend
+	isWeekEnd = function(date){
+		date.getDay();
+		return (dayOfWeek == 6 || dayOfWeek == 0);
+	}
+
+	// check if value exist in array
+	Array.prototype.contains = function(obj) {
+		var i = this.length;
+		while (i--) {
+			if (this[i] == obj) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// get next day
+	Date.prototype.addDays = function(days) {
+		var dat = new Date(this.valueOf())
+		dat.setDate(dat.getDate() + days);
+		return dat;
+	}
+
+	//format date
+	Date.prototype.format = function() {
+		var mm = this.getMonth() + 1;
+		var dd = this.getDate();
+		if (mm < 10) {
+			mm = '0' + mm;
+		}
+		if (dd < 10) {
+			dd = '0' + dd;
+		}
+		return this.getFullYear()+'-'+mm+'-'+dd;
+	};
+  
+  
+  // Function til at strippe HTML (bruges i loopet hvor datoer laves om til array (fordi ikke alle <p>-tags indeholde <span>.
+  function strip(html)
+  {
+     var tmp = document.createElement("DIV");
+     tmp.innerHTML = html;
+     return tmp.textContent || tmp.innerText || "";
+  }
+  
+
+  
+  // BLACKLISTEDE DAGE. I STEDET FOR HARDCODED, SKAL DATOERNE KOMME FRA SIDENS CONTENT.
+	var start = tomorrow;
+	var daysAhead = 1;
+
+  
+  
+
+  
+  
+  
+  
+  
+  
+	// Sæt array med bannede datoer.  
+	var holidayList = [];
+  
+  
+  	// Function til at loop gennem html elementer <p> som indeholder datoer fra sidens content.
+  	function disp( divs ) {
+      var a = [];
+      var formattedDate;
+      for ( var i = 0; i < divs.length; i++ ) {
+        
+        	formattedDate = strip(divs[ i ].innerHTML);
+            var formattedDate = formattedDate.split("-").reverse().join("-");
+        	
+    		holidayList.push( formattedDate );
+    	}
+     
+    }
+	disp( $( "#countdownContent p" ).toArray() );
+  
+  
+  
+  
+  
+  
+  
+
+	var result = getWorkingDays(start,daysAhead,holidayList);
+  
+  	result.forEach(function(item,index){
+  		document.getElementById('result').insertAdjacentHTML('beforeend','<span>'+item+'<br>');
+  	})
+    
+	console.log(result[0]);
+
+
+    
+    
+    
+   
+  
+    
+    
+    
+// COUNT DOWN HER
+  function getTimeRemaining(endtime) {
+    var t = endtime - new Date().getTime();
+    var seconds = Math.floor((t / 1000) % 60);
+    var minutes = Math.floor((t / 1000 / 60) % 60);
+    var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+    var days = Math.floor(t / (1000 * 60 * 60 * 24));
+    
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
+    
+   
+  }
+
+  function initializeClock(id, endtime) {
+    var clock = document.getElementById(id);
+    var daysSpan = clock.querySelector('.days');
+    var hoursSpan = clock.querySelector('.hours');
+    var minutesSpan = clock.querySelector('.minutes');
+    var secondsSpan = clock.querySelector('.seconds');
+   
+
+    function updateClock() {
+      var t = getTimeRemaining(endtime);
+
+      daysSpan.innerHTML = t.days;
+      hoursSpan.innerHTML = ('' + t.hours).slice(-2);
+      minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+      secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+      
+      var daysHoursMinsSecs = $('.days').text() + $('.hours').text() + $('.minutes').text() + $('.seconds').text();
+      
+      //console.log ("TID NU: " + daysHoursMinsSecs);
+      
+      //Lav om til int.
+      //var parsedDaysHoursMinsSecs = parseFloat(daysHoursMinsSecs);
+
+      if( daysHoursMinsSecs.startsWith("-") ){
+      
+       // $("#clockdiv").hide();
+        clearInterval(timeinterval);
+       
+       
+        
+        
+      // location.reload();
+      }
+      
+       
+      
+      // Hvis dage er under 1, så vis ikke antal dage.
+      if( $('.days').text() < 1 ){
+      	$("#cdDays").hide();
+      }
+      
+      // Hvis timer er under 1, så vis ikke antal timer.
+      if( $('.hours').text() < 1 ){
+      	$("#cdHours").hide();
+      }
+      
+      // Hvis dage er OVER 1, så vis ikke minutter og sekunder.
+      if( $('.days').text() > 0 ){
+      	$("#cdMins, #cdSecs").hide();
+      }
+      
+      
+    }
+
+    updateClock();
+    
+    
+    var timeinterval = setInterval(updateClock, 1000);
+    console.log("VIGTIGT: " + timeinterval);
+  }
+
+    
+    // parse a date in yyyy-mm-dd format
+function parseDate(input) {
+  var parts = input.split('-');
+  // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+  return new Date(parts[0], parts[1]-1, parts[2]); // Note: months are 0-based
+}
+
+    // TID HER
+    var tomorrowWithTime = result[0];
+    
+ 		tomorrowWithTime = new Date(tomorrowWithTime);
+    	tomorrowWithTime = tomorrowWithTime.toISOString();
+    tomorrowWithTime = tomorrowWithTime.substring(0, tomorrowWithTime.length - 14);
+    tomorrowWithTime = tomorrowWithTime + "T09:24:59Z";
+
+      
+    // format skal være: Feb 02 2020 05:18:44
+    
+  
+    
+
+    
+    
+    
+    
+  var deadline = Date.parse(tomorrowWithTime);
+
+    
+  
+  
+    
+  
+  
+    
+    
+
+  initializeClock('clockdiv', deadline);
+    
+   
+
+  });
+
+  
+    
+    
+    
+    
+    
+    
+    
+    
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</script>

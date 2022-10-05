@@ -1,0 +1,389 @@
+{% assign wrap_property_key = 'cart.wrapping.property_key' | t %}
+{% assign wrap_property_value = 'cart.wrapping.property_value' | t %} 
+{% assign wrap_product = all_products[section.settings.wrap_product] %}
+{% assign wrap_types = section.settings.wrap_product_types | split: ',' %}
+
+<div class="sixteen columns">
+  <div class="section clearfix">
+    <h1>{{ 'cart.general.title' | t }}</h1>
+  </div>
+</div>
+
+{% if cart.item_count == 0 %}
+  <div class="sixteen columns">
+    <div class="section clearfix">
+      <p class="quote">{{ 'cart.general.continue_browsing_html' | t }}</p>
+      <br class="clear" />
+      <br class="clear" />
+    </div>
+  </div>
+{% else %}
+  <div class="sixteen columns">
+    <form action="/cart" method="post" id="cart_form">
+      <div class="checkout_table_header">
+        <div class="six columns alpha">
+          <h4>{{ 'cart.general.item' | t }}</h4>
+        </div>
+        
+        <div class="four columns">
+          <h4>{{ 'cart.general.wrap' | t }}</h4>
+        </div>
+
+        <div class="two columns">
+          <h4>{{ 'cart.general.price' | t }}</h4>
+        </div>
+
+        <div class="two columns">
+          <h4>{{ 'cart.general.quantity' | t }}</h4>
+        </div>
+
+        <div class="two columns omega">
+          <h4>{{ 'cart.general.total' | t }}</h4>
+        </div>
+
+        <div class="clear"></div>
+      </div>
+
+      <ul class="none">
+        {% for item in cart.items %}
+          {% if item.product_id == wrap_product.id %}
+            {% continue %}
+          {% endif %}
+        
+          <li data-index="{{ forloop.index }}">
+            <div class="six columns title_column alpha">
+              <a href="{{ item.url }}" title="{{ item.title | escape }}" class="cart_image">
+                <img src="{{ item | img_url: '180x', scale: 2 }}" alt="{{ item.title | escape }}">
+              </a>
+
+              <div class="left">
+                <p class="cart_price">
+                  <span class="money">{{ item.price | money }}</span>
+                  <span class="price_total_text">
+                    <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" title="{{ 'cart.general.remove' | t }}" class="remove"><span class="ss-icon">&#x2421;</span></a>
+                  </span>
+                </p>
+                
+                <p><a href="{{ item.url }}">{{ item.product.title }}</a></p>
+
+                {% unless item.variant.title contains "Title" %}
+                  <p class="meta">
+                    {% for option in item.product.options %}
+                      <span class="label">{{ option }}:</span> <span>{{ item.variant.options[forloop.index0] }}</span><br />
+                    {% endfor %}
+                  </p>
+                {% endunless %}
+
+                {% if item.properties %}
+                  <p class="meta">
+                    {% for p in item.properties %}
+                      {% unless p.last == blank or p.first == wrap_property_key %}
+                        {% if p.last contains '/uploads/' %}
+                          {{ p.first }}: <a class="lightbox" href="{{ p.last }}">{{ 'cart.general.uploaded_file' | t }}</a><br />
+                        {% else %}
+                          {% unless p.last contains '//cdn.shopify.com' %} 
+                    
+                    {% if p.first contains "pa-partnerid" %}
+ 					<span style="display: none;">{{ p.first }}: {{ p.last }}</span><br />
+                    {% else %}
+                    {{ p.first }}: {{ p.last }}<br />
+                    {% endif %}
+             		
+              
+                    
+                    
+                          {% endunless %}
+                        {% endif %}
+                      {% endunless %}
+                    {% endfor %}
+                  </p>
+                {% endif %}
+
+                {% if item.properties %}
+                  {% for p in item.properties %}
+                    {% unless p.last == blank %}
+                      {% if p.last contains '//cdn.shopify.com' %}              
+                        <p class="meta">
+                          {{ p.first | remove_first: "_" }}<br>
+                          {% assign image_srcs = p.last | split: '|' %}
+                          {% for image_src in image_srcs %}<img src="{{ image_src }}">{% endfor %}
+                        </p>
+                      {% endif %}
+                    {% endunless %}
+                  {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="four columns">
+              {% if wrap_types contains item.product.type %}
+                <label class="wrap">
+                  <input type="checkbox" class="wrap" {% if item.properties[wrap_property_key] == wrap_property_value %}checked{% endif %}> {{ 'cart.general.add_wrap' | t }}
+                  {% if section.settings.wrap_url %}
+                    <a href="#wrap" class="lightbox"><i class="fa fa-info-circle"></i></a>
+                  {% endif %}
+                </label>
+              {% else %}
+                &nbsp;
+              {% endif %}
+            </div>
+
+            <div class="two columns">
+              <p class="price_total">
+                <span class="money">{{ item.price | money }}</span>
+              </p>
+            </div>
+
+            <div class="two columns mobile_right" id="quantity_{{ forloop.index }}">
+              <span class="quantity_label">{{ 'cart.general.quantity' | t }}:</span>
+              <input type="number" min="0" size="2" class="quantity" name="updates[]" value="{{ item.quantity }}">
+            </div>
+
+            <div class="two columns mobile_right omega">
+              <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" title="{{ 'cart.general.remove' | t }}" class="right mobile_hidden remove"><span class="ss-icon">&#x2421;</span></a>
+
+              <span class="price_total">
+                <span class="money">{{ item.line_price | money }}</span>
+              </span>
+            </div>
+
+            <div class="sixteen columns clearfix alpha omega">
+              <hr>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+      
+      <div class="twelve columns alpha">
+        <h4 class="subtotal">{{ 'cart.general.subtotal' | t }}</h4>
+      </div>
+
+      <div class="four columns omega">
+        <h4>
+          <span class="money"><span id="bk-cart-subtotal-price">{{ cart.total_price | money_with_currency }}</span></span>
+          {% include 'viabill-pricetag-cart' %}
+
+        </h4>
+        
+        {% comment %}
+          <small id="estimated-shipping">+ <em><span class="money">{{ 0 | money }}</span></em> {{ 'cart.shipping_calculator.estimated_shipping' | t }}</small>
+        {% endcomment %}
+
+        <p>
+          <small class="excluding_tax"><em>{{ 'cart.general.excluding_tax_shipping' | t }}</em></small>
+
+          {% if settings.show_multiple_currencies %}
+            <small>
+              <em>{{ 'cart.general.orders_processed_in_currency_html' | t: currency: shop.currency }}</em>
+            </small>
+          {% endif %}
+        </p>
+        
+        {% if section.settings.display_tos_checkbox %}
+          <div>
+            <input type="checkbox" class="tos_agree" id="cart_agree" required />
+            <label class="tos_label" for="cart_agree">
+              {{ 'cart.general.agree_to_terms_html' | t }}
+            </label>
+          </div>
+        {% endif %}
+      </div>
+      
+      {% if section.settings.display_special_instructions %}
+        <div class="three columns mobile_left alpha">
+          <label for="note">{{ 'cart.general.note' | t: shop_name: shop.name }}:</label>
+        </div>
+
+        <div class="seven columns">
+          <textarea id="note" name="note" rows="2">{{ cart.note }}</textarea>
+        </div>
+      {% endif %}
+      
+      <div class="four columns {% if section.settings.display_special_instructions %}offset-by-two omega{% else %}offset-by-twelve alpha omega{% endif %}">
+        <p>
+          <input type="submit" class="action_button" id="checkout" name="checkout" value="{{ 'cart.general.checkout' | t }}" />
+        </p>
+
+        <div>{{ content_for_additional_checkout_buttons | google_button_options: 'transparent' }}</div>
+
+        <a href="/collections/all" class="secondary_button">{{ 'cart.general.continue_shopping_link_html' | t }}</a>
+      </div>
+    </form>
+  </div>
+
+  <div class="sixteen columns">
+    <div data-app="eastsideco_cartOffers" data-shop="{{ shop.permanent_domain }}" data-money-format="{{ shop.money_format }}">
+      <script id="cartData" type="application/json">{{ cart.items | json }}</script>
+    </div>
+  </div>
+
+  {% if wrap_product %}
+    <div style="display: none;">
+      <div id="wrap">
+        <div class="image">
+          <img src="{{ wrap_product.featured_image.src | img_url: '350x' }}" alt="{{ wrap_product.featured_image.alt | escape }}">
+        </div>
+        
+        <div class="rte">{{ wrap_product.description }}</div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if section.settings.tos_page %}
+    {% assign page = pages[section.settings.tos_page] %}
+    
+    <div style="display: none;">
+      <div id="tos">
+        <h2>{{ page.title }}</h2>
+        <div class="rte">{{ page.content }}</div>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Cart page",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_special_instructions",
+      "label": "Show \"note\" text box"
+    },
+    {
+      "type": "checkbox",
+      "id": "display_tos_checkbox",
+      "label": "Show \"agree to terms\" checkbox"
+    },
+    {
+      "type": "page",
+      "id": "tos_page",
+      "label": "Terms page"
+    },
+    {
+      "type": "header",
+      "content": "Wrapping"
+    },
+    {
+      "type": "product",
+      "id": "wrap_product",
+      "label": "Choose wrapping product"
+    },
+    {
+      "type": "textarea",
+      "id": "wrap_product_types",
+      "label": "Product types available for wrapping",
+      "info": "Seperate types with a comma"
+    },
+    {
+      "type": "url",
+      "id": "wrap_url",
+      "label": "Information URL"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  setTimeout(function(){
+  	$(function() {
+    	var wrap_product_id = {{ wrap_product.first_available_variant.id }};
+  var wrap_property_key = {{ wrap_property_key | json }};
+  var wrap_property_value = {{ wrap_property_value | json }};
+  var items = {{ cart.items | json }};
+  
+  var wrap_products_count = 0;
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    
+    if (item.id !== wrap_product_id) {
+      if (item.properties && item.properties[wrap_property_key] === wrap_property_value) {
+        wrap_products_count += item.quantity;
+      }
+    }
+  }
+  
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    
+    if (item.id === wrap_product_id) {
+      if (wrap_products_count !== item.quantity) updateWrappingLine(items);
+      
+      break;
+    }
+  }
+  
+  $("#cart_form input[type='number']").on('change', function() {
+    var index = $(this).closest('li').data('index');
+    
+    jQuery.ajax({
+      url: '/cart/change.js',
+      type: 'post',
+      dataType: 'json',
+      data: {
+        line: index,
+        quantity: $(this).val()
+      },
+      success: updateWrappingLine
+    });
+  });
+  
+  $('#cart_form input.wrap').on('change', function() {
+    $('#cart_form input').prop('disabled', true);
+    
+    var index = $(this).closest('li').data('index');
+    var item = items[(index - 1)];
+    
+    var property = '';
+    if ($(this).is(':checked')) {
+      var property = {{ wrap_property_value | json }};
+    }
+    
+    var properties = item.properties;
+    if (properties === null) properties = {};
+    properties[{{ wrap_property_key | json }}] = property;
+    
+    jQuery.ajax({
+      url: '/cart/change.js',
+      type: 'post',
+      dataType: 'json',
+      data: {
+        quantity: item.quantity,
+        line: index,
+        properties: properties
+      },
+      success: function(data) {
+        updateWrappingLine(data.items);
+      }
+    });
+  });
+  
+  function updateWrappingLine(items) {
+    var count = 0;
+    
+    for (var i = 0; items.length >= i + 1; i++) {
+      var item = items[i];
+      
+      if (item.properties !== null && item.properties[wrap_property_key] === wrap_property_value) {
+        count = count + item.quantity;
+      }
+    }
+    
+    jQuery.ajax({
+      url: '/cart/update.js',
+      type: 'post',
+      dataType: 'json',
+      data: {
+        updates: {
+          {{ wrap_product.first_available_variant.id }}: count
+        }
+      },
+      success: function () {
+        window.location.href = '/cart';
+      }
+    });  
+  };
+    })
+  },350);
+  
+</script>

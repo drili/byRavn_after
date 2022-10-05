@@ -1,0 +1,19 @@
+{% if shop.metafields.viabill_pricetag.data_view %} 
+	{% assign viabill_data_view = shop.metafields.viabill_pricetag.data_view %}
+{% else %}
+	{% assign viabill_data_view = "product" %}
+{% endif %}
+<div class="viabill-price-section" style="margin-top: -20px;">
+  <div class="viabill-pricetag" data-view="{{ viabill_data_view }}" data-price="{{ product.price | money }}">
+  </div>
+</div>
+<script>
+(function(){
+  var o=document.createElement('script');
+  o.type='text/javascript';
+  o.async=true;
+  o.src='https://secure.viabill.com/psp/web/webshop/pricetag/{{ shop.metafields.viabill_pricetag.shopuri }}';
+  var s=document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(o,s);
+})();
+</script>

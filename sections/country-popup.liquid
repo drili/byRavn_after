@@ -1,0 +1,99 @@
+{% if section.settings.enable %}
+  <script defer>
+    $(document).ready(function() {
+      if ($.cookie('country-popup-shown') !== 'yes') {
+        $.cookie('country-popup-shown', 'yes', {
+          expires: 30
+        });
+
+        $.get('https://extreme-ip-lookup.com/json/', function (response) {
+          if (response.countryCode === 'NO') {
+            $('#country-popup-init-1').fancybox().click();
+          }
+          
+          if (response.countryCode === 'SE') {
+            $('#country-popup-init-2').fancybox().click();
+          }
+        }, 'jsonp');
+      }
+    });
+  </script>
+
+  <div style="display: none;">
+    <a href="#country-popup-1" id="country-popup-init-1"></a>
+
+    <div id="country-popup-1">
+      {% if section.settings.title != blank %}<h2>{{ section.settings.title }}</h2>{% endif %}
+      {% if section.settings.text != blank %}<div class="rte">{{ section.settings.text }}</div>{% endif %}
+
+      {% if section.settings.button_text != blank and section.settings.button_url != blank %}
+        <p><a href="{{ section.settings.button_url }}" class="action_button" onClick="ga('send', 'event', 'Gå til norsk webshop', 'Click', 'byravn.no');">{{ section.settings.button_text }}</a></p>
+      {% endif %}
+
+      {% if section.settings.continue_text != blank %}
+        <p class="text-center"><a href="javascript: void(0)" onclick="$.fancybox.close(); ga('send', 'event', 'Gå til dansk webshop', 'Click', 'byravn.dk');">{{ section.settings.continue_text }}</a></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div style="display: none;">
+    <a href="#country-popup-2" id="country-popup-init-2"></a>
+
+    <div id="country-popup-2">
+      {% if section.settings.title != blank %}<h2>Välkommen till byRavn</h2>{% endif %}
+      {% if section.settings.text != blank %}<div class="rte"><p>Vi har lagt märke till att du besöker oss från en svensk IP-adress,<br>
+och vi vill göra dig uppmärksam på att vi även har en svensk hemsida.</p></div>{% endif %}
+
+      {% if section.settings.button_text != blank and section.settings.button_url != blank %}
+      <p><a href="https://byravn-se.myshopify.com" class="action_button" onClick="ga('send', 'event', 'Gå til norsk webshop', 'Click', 'byravn.se');">Gå till den svenska webbshopen</a></p>
+      {% endif %}
+
+      {% if section.settings.continue_text != blank %}
+      <p class="text-center"><a href="javascript: void(0)" onclick="$.fancybox.close(); ga('send', 'event', 'Gå til dansk webshop', 'Click', 'byravn.dk');">Fortsätt till den danska webbshopen</a></p>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Country popup",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Enable",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "continue_text",
+      "label": "Continue button text"
+    },
+    {
+      "type": "header",
+      "content": "CTA button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Text"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "URL"
+    }
+  ]
+}
+{% endschema %}

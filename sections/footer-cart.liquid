@@ -1,0 +1,21 @@
+<footer class="footer text-align--center">
+  <div class="container">
+    <div class="sixteen columns">
+
+      <div class="sixteen columns alpha omega center">
+        <div class="section">
+
+            <div class="payment_methods">
+              {% for type in shop.enabled_payment_types %}
+                <img src="{{ type | payment_type_img_url }}" alt="{{ type | replace: "_", " " | capitalize }}" />
+              {% endfor %}
+                <img src="{{ 'MobilePay.png' | file_img_url }}" />
+              <img src="https://cdn.shopify.com/s/files/1/1795/0613/files/viabill_shopify.png?2444258223895179073" />
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</footer> <!-- end footer -->
+

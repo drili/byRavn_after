@@ -1,0 +1,60 @@
+{% layout none %}<?xml version="1.0"?>
+<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
+
+{%- assign useSEOtitle = false -%}
+{%- assign useSEOdescription = false -%}
+{%- assign CountryCode = 'US' -%}
+{%- if shop.currency == 'CAD' -%}{%- assign CountryCode = 'CA' -%}{%- endif -%}
+{%- assign Color = "" -%}
+{%- assign Size = "" -%}
+<channel>
+<title>{{ shop.name }} {{ collection.title | strip_html | strip_newlines | replace: '&', '&amp;' }}</title>
+<link>{{ shop.url }}</link>
+<description>{{ collection.description | strip_html | strip_newlines | replace: '&', '&amp;' }}</description>
+{% for product in collection.products %} 
+{%- assign GoogleProductCategory = product.metafields.mm-google-shopping.google_product_category -%}
+{%- assign Gender = product.metafields.mm-google-shopping.gender -%}
+{%- assign AgeGroup = product.metafields.mm-google-shopping.age_group -%}
+  {% assign instructions = product.metafields.global %}
+      
+  {% for variant in product.variants %}
+    {%- assign Color = "" -%}
+    {%- assign Size = "" -%}
+    {%- for option in product.options -%}
+  	{%- if option == 'Color' -%}{%- capture Color -%}{{ variant.options[forloop.index0] }}{%- endcapture -%}
+  	{%- elsif option == 'Size' -%}{%- capture Size -%}{{ variant.options[forloop.index0]  }}{%- endcapture -%}
+  	{%- endif -%}
+  	{%- endfor -%}
+    
+    {%- capture productTitle -%}{{ product.vendor }} {{ product.title }}{%- endcapture -%}
+    {%- unless productTitle contains Color -%}{%- capture productTitle -%}{{ productTitle }} {{ Color }}{%- endcapture -%}{%- endunless -%}
+    {%- if useSEOtitle and product.metafields.global.title_tag.size > 0 -%}{%- assign productTitle = product.metafields.global.title_tag -%}{%- endif -%}
+    {%- assign productDescription = product.description -%}
+    {%- if useSEOdescription and product.metafields.global.description_tag.size > 0 -%}{%- assign productDescription = product.metafields.global.description_tag -%}{%- endif -%}
+
+    {%- assign OnSale = false -%}
+    {%- assign Price = variant.price -%}
+    {%- if variant.compare_at_price > variant.price -%}
+      {%- assign OnSale = true -%}
+      {%- assign Price = variant.compare_at_price -%}
+      {%- assign SalePrice = variant.price -%}
+    {%- endif -%}
+
+<item>
+  <id>{{ variant.sku }}</id>
+  <title>{{ productTitle | strip_html | replace: '&', '&amp;' }}</title>
+  <description>{{ instructions.description_tag }}</description>
+  <link>{{ shop.url }}{{ variant.url }}</link>
+  <image_link>http:{% if variant.image.src %}{{ variant.image.src | product_img_url: 'grande' }}{% else %}{{ product.featured_image.src | product_img_url: 'grande' }}{% endif %}</image_link>
+  <availability>{{product.available}}</availability>
+  <price>{{ Price | money_without_currency }} {{ shop.currency }}</price> 
+  <condition>New</condition>
+  <brand>byRavn</brand>
+  <test>{{product.metafields.mm-google-shopping.google_product_category}}</test>
+</item>
+
+
+{% endfor %}
+{% endfor %}
+</channel>
+</rss>

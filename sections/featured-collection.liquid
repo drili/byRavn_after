@@ -1,0 +1,114 @@
+{% assign collection = collections[section.settings.frontpage_collection] %}
+{% assign products = collections[section.settings.frontpage_collection].products %}
+{% assign products_per_row = section.settings.frontpage_products_per_row %}
+
+<div class="container">
+  <div class="sixteen columns">
+    <div class="section clearfix">
+      {% if section.settings.title != blank %}
+        <h2 class="section-header home">
+          <a href="{{ collections[section.settings.frontpage_collection].url }}">
+            {{ section.settings.title }}
+          </a>
+        </h2>
+      {% endif %}
+
+      {% if products.length > 0 %}
+        {% assign limit = section.settings.frontpage_products_limit | plus: 1 %}
+        {% include 'product-loop', limit: limit %}
+      {% else %}
+        {% assign limit = section.settings.frontpage_products_limit %}
+        <div class="featured-collection--placeholder clearfix">
+          {% for i in (1..limit) %}
+            <div class="{% if products_per_row == "2" %} eight columns {% cycle 'alpha', 'omega' %}{% elsif products_per_row == "3" %} one-third column {% cycle 'alpha', '', 'omega' %}{% elsif products_per_row == "4" %} four columns {% cycle 'alpha', '', '', 'omega' %}{% endif %} thumbnail">
+              <a href="#" itemprop="url">
+                <div class="relative product_image">
+                  {% capture num %}{% cycle "1", "2", "3", "4", "5", "6" %}{% endcapture %}
+                  {{ 'collection-' | append: num | placeholder_svg_tag: 'placeholder-svg placeholder-svg--product' }}
+                </div>
+                <div class="info info-collection">
+                  <span class="title">{{ 'homepage.onboarding.product_title' | t }}</span>
+                    <span class="price">
+                    <span class="money">$49.60</span>
+                  </span>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "class": "featured-collection-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Featured collection"
+    },
+    {
+      "type": "collection",
+      "id": "frontpage_collection",
+      "label": "Collection"
+    },
+    {
+      "type": "select",
+      "id": "frontpage_products_per_row",
+      "label": "Products per row",
+      "default": "3",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "frontpage_products_limit",
+      "label": "Limit products",
+      "default": "12",
+      "options": [
+        {
+          "value": "12",
+          "label": "12"
+        },
+        {
+          "value": "24",
+          "label": "24"
+        },
+        {
+          "value": "36",
+          "label": "36"
+        },
+        {
+          "value": "48",
+          "label": "48"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Featured collection",
+    "category": "Collection",
+    "settings": {
+      "frontpage_collection": "",
+      "frontpage_products_per_row": "3"
+    }
+  }]
+}
+{% endschema %}
